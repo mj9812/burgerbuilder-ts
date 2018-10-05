@@ -5,22 +5,19 @@ import './BurgerComp.css';
 interface IProps
 {
     burger: BurgerObj;
-    hasOrder: boolean;
+    orderPhase: number;
 }
 
 export default class BurgerComp extends React.Component<IProps>
 {
-    private burger: BurgerObj;
-
     constructor(props: IProps)
     {
         super(props);
-        this.burger = props.burger;
     }
 
     public shouldComponentUpdate(nextProps: any, nextState: any)
     {
-        return (this.props.hasOrder === nextProps.hasOrder);
+        return (nextProps.orderPhase === 1 || nextProps.orderPhase === 6);
     }
 
     public render()
@@ -36,13 +33,13 @@ export default class BurgerComp extends React.Component<IProps>
     private burgerComp(): JSX.Element[]
     {
         const comps: JSX.Element[] = [];
-        Object.keys(this.burger).forEach(name =>
+        Object.keys(this.props.burger).forEach(name =>
         {
             for (let xx = 0; xx < this.ingrCount(name); xx++) {
                 comps.push(this.ingredientComp(name, xx));
             }
         });
-        if (this.burger.totalIngredientCount === 0) {
+        if (this.props.burger.totalIngredientCount === 0) {
             comps.splice(1, 0, <p key='NoIngs'>Please add ingredients...</p>);
         }
         return comps;
@@ -65,6 +62,6 @@ export default class BurgerComp extends React.Component<IProps>
 
     private ingrCount(name: string)
     {
-        return this.burger.ingredientCount(name);
+        return this.props.burger.ingredientCount(name);
     }
 }

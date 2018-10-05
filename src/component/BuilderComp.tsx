@@ -7,22 +7,19 @@ interface IProps
     burger: BurgerObj;
     builderClick: (event: any) => void;
     orderClick: () => void;
-    hasOrder: boolean;
+    orderPhase: number;
 }
 
 export default class BuilderComp extends React.Component<IProps>
 {
-    private burger: BurgerObj;
-
     constructor(props: IProps)
     {
         super(props);
-        this.burger = props.burger;
     }
 
     public shouldComponentUpdate(nextProps: any, nextState: any)
     {
-        return (this.props.hasOrder === nextProps.hasOrder);
+        return (nextProps.orderPhase === 1 || nextProps.orderPhase === 6);
     }
 
     public render()
@@ -30,13 +27,13 @@ export default class BuilderComp extends React.Component<IProps>
         console.log('builder render...');
         return (
             <div className='BuildControls'>
-                <p>Current Price : {this.burger.calculateTotal} $ </p>
+                <p>Current Price : {this.props.burger.calculateTotal} $ </p>
                 {
-                    this.burger.ingredientNames.map((name) => 
+                    this.props.burger.ingredientNames.map((name) => 
                         this.builderControl(name, this.disableLess(name)))
                 }
                 <button className='OrderButton' onClick={this.props.orderClick}
-                    disabled={(this.burger.totalIngredientCount < 1)}>Order Now
+                    disabled={(this.props.burger.totalIngredientCount < 1)}>Order Now
                 </button>
             </div>
         );
@@ -59,6 +56,6 @@ export default class BuilderComp extends React.Component<IProps>
 
     private disableLess(name: string): boolean
     {
-        return (this.burger.ingredientCount(name) < 1);
+        return (this.props.burger.ingredientCount(name) < 1);
     }
 }

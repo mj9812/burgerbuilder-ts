@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as React from 'react';
 import './AppClass.css';
 import BurgerBuilder from './container/BurgerBuilder';
@@ -18,3 +19,9 @@ export default class AppClass extends React.Component
         );
     }
 }
+
+const axiosObj = axios.create({
+    baseURL: 'https://react-burgerbuilder-ts.firebaseio.com/'
+});
+
+export { axiosObj };

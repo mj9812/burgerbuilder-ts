@@ -17,7 +17,8 @@ export default class BurgerObj
 
     get ingredientNames()
     {
-        return [this.Salad.name , this.Bacon.name , this.Cheese.name , this.Meat.name];
+        return [this.Salad.name , this.Bacon.name , 
+            this.Cheese.name , this.Meat.name];
     }
 
     public ingredientCount(ingName: string)
@@ -27,7 +28,8 @@ export default class BurgerObj
 
     get totalIngredientCount()
     {
-        return this.Bacon.count + this.Cheese.count + this.Meat.count + this.Salad.count;
+        return this.Bacon.count + this.Cheese.count + 
+            this.Meat.count + this.Salad.count;
     }
 
     public decreaseCount(ingName: string)
