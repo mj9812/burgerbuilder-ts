@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import * as React from 'react';
 import BurgerObj from '../classes/BurgerObj';
 import BurgerComp from '../component/BurgerComp';
@@ -14,7 +13,7 @@ export default class BurgerBuilder extends React.Component
     {
         console.log('BurgerBuilder render...');
         return (
-            <Fragment>
+            <React.Fragment>
                 <BurgerComp burger={this.burger}
                     orderPhase={this.state.opPhase}/>
 
@@ -29,7 +28,7 @@ export default class BurgerBuilder extends React.Component
                     procesing={this.orderProcesing}
                     submitted={this.orderSubmitted}
                     finished={this.orderFinished} />
-            </Fragment>
+            </React.Fragment>
         );
     }
 

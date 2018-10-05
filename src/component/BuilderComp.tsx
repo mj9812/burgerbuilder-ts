@@ -1,18 +1,10 @@
 import * as React from 'react';
-import BurgerObj from '../classes/BurgerObj';
+import { IPropsBuilder } from '../classes/IProps';
 import './BuilderComp.css';
 
-interface IProps
+export default class BuilderComp extends React.Component<IPropsBuilder>
 {
-    burger: BurgerObj;
-    builderClick: (event: any) => void;
-    orderClick: () => void;
-    orderPhase: number;
-}
-
-export default class BuilderComp extends React.Component<IProps>
-{
-    constructor(props: IProps)
+    constructor(props: IPropsBuilder)
     {
         super(props);
     }
@@ -32,9 +24,8 @@ export default class BuilderComp extends React.Component<IProps>
                     this.props.burger.ingredientNames.map((name) => 
                         this.builderControl(name, this.disableLess(name)))
                 }
-                <button className='OrderButton' onClick={this.props.orderClick}
-                    disabled={(this.props.burger.totalIngredientCount < 1)}>Order Now
-                </button>
+                <button className='OrderButton' disabled={this.disableOrder()}
+                    onClick={this.props.orderClick}> Order Now </button>
             </div>
         );
     }
@@ -57,5 +48,10 @@ export default class BuilderComp extends React.Component<IProps>
     private disableLess(name: string): boolean
     {
         return (this.props.burger.ingredientCount(name) < 1);
+    }
+
+    private disableOrder(): boolean
+    {
+        return (this.props.burger.totalIngredientCount < 1);
     }
 }

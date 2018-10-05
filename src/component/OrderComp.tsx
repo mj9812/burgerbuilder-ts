@@ -1,31 +1,12 @@
 import * as React from 'react';
-import BurgerObj from '../classes/BurgerObj';
-import { BackDrop } from './Toolbar';
-import './OrderComp.css';
 import { axiosObj } from '../AppClass';
-import Spinner from './Spinner';
-import { Fragment } from 'react';
+import { Button, Modal, Spinner } from './MiscComps';
+import { IPropsOrder } from '../classes/IProps';
+import './OrderComp.css';
 
-interface IProps
+export default class OrderComp extends React.Component<IPropsOrder>
 {
-    burger: BurgerObj;
-    orderPhase: number;
-    cancelled: () => void;
-    procesing: () => void;
-    submitted: () => void;
-    finished: () => void;
-}
-
-interface IPropsBtn
-{
-    btnType: string;
-    clicked: () => void;
-    children: string;
-}
-
-export default class OrderComp extends React.Component<IProps>
-{
-    constructor(props: IProps)
+    constructor(props: IPropsOrder)
     {
         super(props);
     }
@@ -41,12 +22,9 @@ export default class OrderComp extends React.Component<IProps>
         const hasOrder = (this.props.orderPhase !== 1) && 
             (this.props.orderPhase !== 3) && (this.props.orderPhase !== 6);
         return (
-            <Fragment>
-                <BackDrop show={hasOrder} clicked={this.props.cancelled} />
-                <div className={'Modal' + (hasOrder ? ' ShowModal' : ' HideModal')} >
-                    {((this.props.orderPhase === 4) ? <Spinner /> : this.summary())}
-                </div>
-            </Fragment>
+            <Modal show={hasOrder} clicked={this.props.cancelled}>
+                { this.props.orderPhase === 4 ? <Spinner/> : this.summary() }
+            </Modal>
         );
     }
 
@@ -54,26 +32,24 @@ export default class OrderComp extends React.Component<IProps>
     {
         let btnPanel;
         if (this.props.orderPhase === 5) {
-            btnPanel = <Fragment>
-                <p className='Finish'>Has been successfully submitted.</p>
-                <Button btnType='Success' clicked={this.props.finished}>Finish</Button>
-            </Fragment>;
+            btnPanel = <React.Fragment>
+                <h3 className='Finish'>Your Order has been successfully submitted.</h3>
+                <Button type='Success' clicked={this.props.finished}>Finish</Button>
+            </React.Fragment>;
         } else {
-            btnPanel = <Fragment>
+            btnPanel = <React.Fragment>
+                <h3>Your Order</h3>
+                <p>A Delicious Burger
+                    with the following ingredients</p>
+                <ul> {this.props.burger.ingredientNames.map((name) =>
+                    this.listItem(name))} </ul>
+                <p>Total Price : {this.props.burger.calculateTotal} $ </p>
                 <p>Continue to Checkout?</p>
-                <Button btnType='Danger' clicked={this.props.cancelled}>Cancel</Button>
-                <Button btnType='Success' clicked={this.orderContinue}>Continue</Button>
-            </Fragment>;
+                <Button type='Danger' clicked={this.props.cancelled}>Cancel</Button>
+                <Button type='Success' clicked={this.orderContinue}>Continue</Button>
+            </React.Fragment>;
         }
-        return <Fragment>
-            <h3>Your Order</h3>
-            <p>A Delicious Burger
-                with the following ingredients</p>
-            <ul> {this.props.burger.ingredientNames.map((name) =>
-                this.listItem(name))} </ul>
-            <p>Total Price : {this.props.burger.calculateTotal} $ </p>
-            { btnPanel }
-        </Fragment>;
+        return btnPanel;
     }
 
     private listItem(name: string): JSX.Element
@@ -93,7 +69,7 @@ export default class OrderComp extends React.Component<IProps>
                 address: {
                     street: '17/500 MLA Road',
                     place: 'Udayamperoor',
-                    zipcode: '682307',
+                    zipcode: '82307',
                     state: 'Kerala, IND'
                 },
                 email: 'tester@testing.com',
@@ -112,6 +88,3 @@ export default class OrderComp extends React.Component<IProps>
         );
     }
 }
-
-const Button = (props: IPropsBtn) => (<button onClick={props.clicked}
-    className={'Button ' + props.btnType}> {props.children} </button>);

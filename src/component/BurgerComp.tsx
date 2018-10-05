@@ -1,16 +1,10 @@
 import * as React from 'react';
-import BurgerObj from '../classes/BurgerObj';
+import { IPropsBurger } from '../classes/IProps';
 import './BurgerComp.css';
 
-interface IProps
+export default class BurgerComp extends React.Component<IPropsBurger>
 {
-    burger: BurgerObj;
-    orderPhase: number;
-}
-
-export default class BurgerComp extends React.Component<IProps>
-{
-    constructor(props: IProps)
+    constructor(props: IPropsBurger)
     {
         super(props);
     }
