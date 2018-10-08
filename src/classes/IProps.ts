@@ -30,4 +30,6 @@ export interface IPropsOrder extends IPropsBurger
     procesing: () => void;
     submitted: () => void;
     finished: () => void;
+    aborted: (erMsg: string) => void;
+    errorMsg: string;
 }

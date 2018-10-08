@@ -18,24 +18,29 @@ export default class BurgerComp extends React.Component<IPropsBurger>
     {
         console.log('burger render...');
         return (
-            <div className={'Burger'}>
-                {this.burgerComp()}
-            </div>
-        );
+        <div className='Burger'>
+            {this.burgerComp()}
+        </div>);
     }
 
     private burgerComp(): JSX.Element[]
     {
-        const comps: JSX.Element[] = [];
-        Object.keys(this.props.burger).forEach(name =>
+        const breads = this.props.burger.breads;
+        const comps: JSX.Element[] = [ this.ingredientComp(breads[0].name, 0) ];
+        if (this.props.burger.countTotal === 2)
         {
-            for (let xx = 0; xx < this.ingrCount(name); xx++) {
-                comps.push(this.ingredientComp(name, xx));
-            }
-        });
-        if (this.props.burger.totalIngredientCount === 0) {
-            comps.splice(1, 0, <p key='NoIngs'>Please add ingredients...</p>);
+            comps.push(<p key='NoIngr'>Please add ingredients...</p>);
         }
+        else {
+            this.props.burger.ingredients.forEach(ingr =>
+                {
+                    for (let xx = 0; xx < ingr.count; xx++) {
+                        comps.push(this.ingredientComp(ingr.name, xx));
+                    }
+                }
+            );
+        }
+        comps.push(this.ingredientComp(breads[1].name, 0));
         return comps;
     }
 
@@ -49,13 +54,6 @@ export default class BurgerComp extends React.Component<IPropsBurger>
                 </div>
             );
         }
-        else {
-            return <div key={name + i} className={name} />;
-        }
-    }
-
-    private ingrCount(name: string)
-    {
-        return this.props.burger.ingredientCount(name);
+        else { return <div key={name + i} className={name} />; }
     }
 }

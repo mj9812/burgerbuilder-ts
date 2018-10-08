@@ -1,13 +1,14 @@
+
 export default class IngrObj
 {
     private _name: string;
     private _count: number;
     private _price: number;
 
-    constructor(str: string, pr: number)
+    constructor(str: string, cn: number, pr: number)
     {
         this._name = str;
-        this._count = 0;
+        this._count = cn;
         this._price = pr;
     }
 

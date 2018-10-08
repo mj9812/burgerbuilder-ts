@@ -27,7 +27,7 @@ const BackDrop = (props: IPropsShow) => (props.show ?
 
 const SideDrawer = (props: IPropsShow) =>
 {
-    const cssclass = 'SideDrawer ' + (props.show ? 'Open' : 'Close');
+    const cssclass = 'SideDrawer ' + (props.show ? 'DrawerOpen' : 'DrawerClose');
     return (
         <div className={cssclass}>
             <div className='SideLogo'> <Logo /> </div>

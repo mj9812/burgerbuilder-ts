@@ -2,56 +2,71 @@ import IngrObj from "./IngrObj";
 
 export default class BurgerObj
 {
-    private BreadTop: IngrObj = new IngrObj('BreadTop', 2.5);
-    private Salad: IngrObj = new IngrObj('Salad', 0.5);
-    private Bacon: IngrObj = new IngrObj('Bacon', 0.7);
-    private Cheese: IngrObj = new IngrObj('Cheese', 0.4);
-    private Meat: IngrObj = new IngrObj('Meat', 1.3);
-    private BreadBottom: IngrObj = new IngrObj('BreadBottom', 1.5);
+    private fullItem: IngrObj[];
+    private fullCopy: any[];
+    private breds:IngrObj[] = [];
+    private ingrs:IngrObj[] = [];
+    private totalCount = 0;
+    private totalPrice = 0;
 
-    constructor()
+    get fullItems()
     {
-        this.BreadTop.count = 1;
-        this.BreadBottom.count = 1;
+        return this.ingrs;
     }
-
-    get ingredientNames()
+    set fullItems(igs)
     {
-        return [this.Salad.name , this.Bacon.name , 
-            this.Cheese.name , this.Meat.name];
+        this.fullItem = igs;
+        this.fullCopy = this.fullItem.map(ig => ({...ig}));
+        this.breds = this.fullItem.filter(ig => ig.name.startsWith('Bread'));
+        this.ingrs = this.fullItem.filter(ig => !ig.name.startsWith('Bread'));
+        this.fullItem.forEach(ig => {
+            this.totalCount += ig.count;
+            this.totalPrice += (ig.price * ig.count);
+        });
     }
-
-    public ingredientCount(ingName: string)
+    public resetItems()
     {
-        return this[ingName].count;
+        this.totalCount = 0;
+        this.totalPrice = 0;
+        this.fullItems = this.fullCopy;
     }
-
-    get totalIngredientCount()
+    
+    get breads()
     {
-        return this.Bacon.count + this.Cheese.count + 
-            this.Meat.count + this.Salad.count;
+        return this.breds;
     }
-
-    public decreaseCount(ingName: string)
+    get ingredients()
     {
-        if(this[ingName].count > 0) {
-            this[ingName].count -= 1;
-        }
+        return this.ingrs;
     }
 
     public increaseCount(ingName: string)
     {
-        this[ingName].count += 1;
+        const ingr = this.ingrs.find(ig => (ig.name === ingName));
+        if(ingr) {
+            ingr.count += 1;
+            this.totalCount += 1;
+            this.totalPrice += ingr.price;
+        }
     }
 
-    get calculateTotal()
+    public decreaseCount(ingName: string)
     {
-        let totalPrice = 0;
-        Object.keys(this).forEach( ingr => {
-            if(this[ingr].count > 0) {
-                totalPrice += (this[ingr].price * this[ingr].count);
-            }
-        });
-        return totalPrice.toFixed(2);
+        const ingr = this.ingrs.find(ig => (ig.name === ingName));
+        if(ingr && ingr.count > 0) {
+            ingr.count -= 1;
+            this.totalCount -= 1;
+            this.totalPrice -= ingr.price;
+        }
+    }
+
+    get countTotal()
+    {
+        return this.totalCount;
+    }
+    
+    get priceTotal()
+    {
+        return this.totalPrice.toFixed(2);
     }
 }

@@ -3,6 +3,7 @@ import { axiosObj } from '../AppClass';
 import { Button, Modal, Spinner } from './MiscComps';
 import { IPropsOrder } from '../classes/IProps';
 import './OrderComp.css';
+import IngrObj from '../classes/IngrObj';
 
 export default class OrderComp extends React.Component<IPropsOrder>
 {
@@ -19,31 +20,37 @@ export default class OrderComp extends React.Component<IPropsOrder>
     public render()
     {
         console.log('order render... ');
-        const hasOrder = (this.props.orderPhase !== 1) && 
-            (this.props.orderPhase !== 3) && (this.props.orderPhase !== 6);
+        const orderPhase = this.props.orderPhase;
+        const hasOrder = (orderPhase > 1) && (orderPhase !== 3) && (orderPhase !== 6);
         return (
-            <Modal show={hasOrder} clicked={this.props.cancelled}>
-                { this.props.orderPhase === 4 ? <Spinner/> : this.summary() }
-            </Modal>
-        );
+        <Modal show={hasOrder} clicked={this.props.cancelled}>
+            {orderPhase === 4 ? <Spinner/> : this.summary(orderPhase)}
+        </Modal>);
     }
 
-    private summary()
+    private summary(orderPhase: number)
     {
         let btnPanel;
-        if (this.props.orderPhase === 5) {
+        if (orderPhase === 5) {
             btnPanel = <React.Fragment>
-                <h3 className='Finish'>Your Order has been successfully submitted.</h3>
+                <p className='Finish'>Your Order has been successfully submitted.</p>
                 <Button type='Success' clicked={this.props.finished}>Finish</Button>
+            </React.Fragment>;
+        } else if (orderPhase === 7) {
+            btnPanel = <React.Fragment>
+                <p>Could not submit Your Order! {this.props.errorMsg}!!</p>
+                <Button type='Danger' clicked={this.props.cancelled}>Close</Button>
             </React.Fragment>;
         } else {
             btnPanel = <React.Fragment>
                 <h3>Your Order</h3>
                 <p>A Delicious Burger
-                    with the following ingredients</p>
-                <ul> {this.props.burger.ingredientNames.map((name) =>
-                    this.listItem(name))} </ul>
-                <p>Total Price : {this.props.burger.calculateTotal} $ </p>
+                    with the following ingredients
+                </p>
+                <ul>
+                    {this.props.burger.ingredients.map(ingr => this.listItem(ingr))}
+                </ul>
+                <p>Total Price : {this.props.burger.priceTotal} $ </p>
                 <p>Continue to Checkout?</p>
                 <Button type='Danger' clicked={this.props.cancelled}>Cancel</Button>
                 <Button type='Success' clicked={this.orderContinue}>Continue</Button>
@@ -52,18 +59,20 @@ export default class OrderComp extends React.Component<IPropsOrder>
         return btnPanel;
     }
 
-    private listItem(name: string): JSX.Element
+    private listItem(ingr: IngrObj): JSX.Element
     {
-        return <li key={name}>{name + ' : ' +this.props.burger.ingredientCount(name)}</li>
+        return <li key={ingr.name}> {ingr.name + ' : ' + ingr.count} </li>
     }
 
     private orderContinue = () =>
     {
         this.props.procesing();
+        const burger = this.props.burger;
+        const ingreds = {};
+        burger.ingredients.forEach(ingr => ingreds[ingr.name] = ingr.count);
         const order = {
-            ingredients: this.props.burger.ingredientNames.map((name) =>
-                (name + ': ' + this.props.burger.ingredientCount(name))),
-            price: this.props.burger.calculateTotal,
+            ingredients: ingreds,
+            price: burger.priceTotal,
             customer: {
                 name: 'Johnson MA',
                 address: {
@@ -76,6 +85,7 @@ export default class OrderComp extends React.Component<IPropsOrder>
                 deliveryMethod: 'fastest'
             }
         };
+
         axiosObj.post('/orders.json', order)
             .then(response =>
             {
@@ -83,7 +93,7 @@ export default class OrderComp extends React.Component<IPropsOrder>
             })
             .catch(err =>
             {
-                this.props.cancelled();
+                this.props.aborted(err.message);
             }
         );
     }

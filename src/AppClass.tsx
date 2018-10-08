@@ -3,6 +3,7 @@ import * as React from 'react';
 import './AppClass.css';
 import BurgerBuilder from './container/BurgerBuilder';
 import ToolBar from './component/Toolbar';
+import { Modal } from './component/MiscComps';
 
 export default class AppClass extends React.Component
 {
@@ -15,6 +16,9 @@ export default class AppClass extends React.Component
                 <main className='BurgerLayoutContent'>
                     <BurgerBuilder />
                 </main>
+                {/* <Modal show={true} >
+                <p>Something went wrong...</p>
+                </Modal> */}
             </React.Fragment>
         );
     }
