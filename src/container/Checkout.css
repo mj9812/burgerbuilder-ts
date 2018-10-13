@@ -1,0 +1,42 @@
+.CheckOutLayoutMaster {
+    width: 100%;
+    margin-top: 72px;
+    display: grid;
+    grid-template-columns: 65% 35%;
+}
+.CheckOutLayout {
+    font-size: 1.1em;
+    /* background-color: lightgrey; */
+}
+.CheckOutLayout h4 {
+    margin-top: 45px;
+}
+
+.CheckOutLayout p {
+    font-weight: 500;
+}
+
+.CustInfo {
+    grid-column: 1 / 3;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 100px 200px;
+    grid-gap: 15px;
+    padding: 20px;
+}
+
+.CustInfoBtn {
+    grid-column: 1 / 3;
+    margin: auto;
+    padding: 10px;
+}
+
+.Finish {
+    color: royalblue;
+    font-size: 1.2em;
+}
+
+.AddressP {
+    padding-left: 75px;
+    margin: 2px;
+}

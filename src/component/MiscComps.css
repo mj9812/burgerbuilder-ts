@@ -10,11 +10,6 @@
     height: 100%;
 }
 
-.SideLogo {
-    height: 11%;
-    margin-bottom: 32px;
-}
-
 .Navigations {
     margin: 0;
     padding: 0;
@@ -59,6 +54,34 @@
     top: 0;
 }
 
+.Modal {
+    position: fixed;
+    z-index: 500;
+    background-color: white;
+    width: 70%;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px black;
+    padding: 16px;
+    left: 15%;
+    top: 15%;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+}
+
+.ShowModal {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.HideModal {
+    transform: translateY(-100vh);
+    opacity: 0;
+}
+
+.Modal p {
+    font-weight: 500;
+}
+
 .SideDrawer {
     position: fixed;
     width: 280px;
@@ -81,32 +104,9 @@
     transform: translateX(-100%);
 }
 
-.Modal {
-    position: fixed;
-    z-index: 500;
-    background-color: white;
-    width: 70%;
-    border: 1px solid #ccc;
-    box-shadow: 1px 1px 1px black;
-    padding: 16px;
-    left: 15%;
-    top: 30%;
-    box-sizing: border-box;
-    transition: all 0.3s ease-out;
-}
-
-.ShowModal {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.HideModal {
-    transform: translateY(-100vh);
-    opacity: 0;
-}
-
-.Modal p {
-    font-weight: 500;
+.SideLogo {
+    height: 11%;
+    margin-bottom: 32px;
 }
 
 .Button {
@@ -154,6 +154,7 @@
     }
     
     .NavigationItem a:hover,
+    .NavigationItem a:active,
     .NavigationItem a.active {
         background-color: #8F5C2C;
         border-bottom: 4px solid #40A4C8;

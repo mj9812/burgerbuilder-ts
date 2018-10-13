@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Logo, Navigations, BackDrop, SideDrawer } from './MiscComps';
+import Navigations from './Navigations';
+import { Logo, BackDrop, SideDrawer } from './MiscComps';
 import './Toolbar.css';
 
 export default class Toolbar extends React.Component
@@ -8,7 +9,6 @@ export default class Toolbar extends React.Component
 
     public render()
     {
-        console.log('toolbar render...');
         return (
             <React.Fragment>
                 <header className='Toolbar'>
@@ -19,11 +19,11 @@ export default class Toolbar extends React.Component
                         <Logo />
                     </div>
                     <nav className='DesktopOnly'>
-                        <Navigations />
+                        <Navigations  />
                     </nav>
                 </header>
                 <BackDrop show={this.state.drawer} clicked={this.closeDrawer}/>
-                <SideDrawer show={this.state.drawer} />
+                <SideDrawer show={this.state.drawer} clicked={this.closeDrawer}/>
             </React.Fragment>
         );
     }

@@ -49,22 +49,20 @@ export default class BurgerObj
             this.totalPrice += ingr.price;
         }
     }
-
     public decreaseCount(ingName: string)
     {
         const ingr = this.ingrs.find(ig => (ig.name === ingName));
-        if(ingr && ingr.count > 0) {
+        if(ingr) {
             ingr.count -= 1;
             this.totalCount -= 1;
             this.totalPrice -= ingr.price;
         }
     }
-
+    
     get countTotal()
     {
         return this.totalCount;
     }
-    
     get priceTotal()
     {
         return this.totalPrice.toFixed(2);

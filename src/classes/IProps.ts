@@ -12,24 +12,38 @@ export interface IPropsChild extends IPropsShow
     children?: any;
 }
 
-export interface IPropsBurger
+export interface IPropsRoute
+{
+    history?: any;
+    location?: any;
+    match?: any;
+}
+
+export interface IPropsBurger extends IPropsRoute
 {
     burger: BurgerObj;
-    orderPhase: number;
+    checkOut?: boolean;
+}
+
+export interface IPropsBurgerBldr extends IPropsBurger
+{
+    initPhase: boolean;
+    errMsg: string;
+    stateChange: (iPh: boolean, er: string) => void;
 }
 
 export interface IPropsBuilder extends IPropsBurger
 {
-    builderClick: (event: any) => void;
+    builderClick: () => void;
     orderClick: () => void;
 }
 
 export interface IPropsOrder extends IPropsBurger
 {
     cancelled: () => void;
-    procesing: () => void;
+    procesing?: () => void;
     submitted: () => void;
-    finished: () => void;
-    aborted: (erMsg: string) => void;
-    errorMsg: string;
+    finished?: () => void;
+    aborted?: (erMsg: string) => void;
+    errorMsg?: string;
 }

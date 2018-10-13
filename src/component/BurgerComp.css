@@ -1,17 +1,25 @@
 
 .Burger {
-    width: 85%;
+    width: 75%;
     margin: auto;
-    height: 250px;
+    height: 300px;
     text-align: center;
     font-weight: 600;
     font-size: 1.2rem;
     overflow: auto;
 }
 
+.BurgerChkOut {
+    width: 80%;
+    margin: auto;
+    height: 230px;
+    text-align: center;
+    overflow: auto;
+}
+
 .BreadBottom {
-    height: 16%;
-    width: 70%;
+    height: 15%;
+    width: 80%;
     background: linear-gradient(#F08E4A, #e27b36);
     border-radius: 0 0 30px 30px;
     box-shadow: inset -15px 0 #c15711;
@@ -19,8 +27,8 @@
 }
 
 .BreadTop {
-    height: 25%;
-    width: 70%;
+    height: 23%;
+    width: 80%;
     background: linear-gradient(#bc581e, #e27b36);
     border-radius: 50% 50% 0 0;
     box-shadow: inset -15px 0 #c15711;
@@ -92,7 +100,7 @@
 }
 
 .Meat {
-    width: 72%;
+    width: 80%;
     height: 8%;
     background: linear-gradient(#7f3608, #702e05);
     margin: 2% auto;
@@ -100,7 +108,7 @@
 }
 
 .Cheese {
-    width: 78%;
+    width: 90%;
     height: 4.5%;
     margin: 2% auto;
     background: linear-gradient(#f4d004, #d6bb22);
@@ -108,7 +116,7 @@
 }
 
 .Salad {
-    width: 74%;
+    width: 85%;
     height: 7%;
     margin: 2% auto;
     background: linear-gradient(#228c1d, #91ce50);
@@ -116,44 +124,41 @@
 }
 
 .Bacon {
-    width: 71%;
+    width: 80%;
     height: 3%;
     background: linear-gradient(#bf3813, #c45e38);
     margin: 2% auto;
 }
 
-@media(max-width: 499px) {
-    .BreadBottom, .Meat, .Bacon, .BreadTop {
-        width: 64%;
-    }
-    .Salad{
-        width: 65%;
-    }   
-    .Cheese {
-        width: 68%;
-    }
-}
 @media (min-width: 500px) and (min-height: 400px) {
     .Burger {
-        width: 78%;
+        width: 350px;
+        height: 300px;
+    }
+    .BurgerChkOut {
+        width: 250px;
+        height: 220px;
+    }
+}
+
+@media (min-width: 500px) and (min-height: 401px) {
+    .Burger {
+        width: 450px;
+        height: 390px;
+    }
+    .BurgerChkOut {
+        width: 350px;
         height: 300px;
     }
 }
-@media (min-width: 600px) and (min-height: 401px) {
+
+@media (min-width: 1000px) and (min-height: 700px) {
     .Burger {
-        width: 75%;
-        height: 370px;
+        width: 600px;
+        height: 530px;
     }
-}
-@media (min-width: 750px) and (min-height: 700px) {
-    .Burger {
-        width: 78%;
-        height: 400px;
-    }
-}
-@media (min-width: 900px) and (min-height: 700px) {
-    .Burger {
-        width: 70%;
-        height: 420px;
+    .BurgerChkOut {
+        width: 450px;
+        height: 390px;
     }
 }

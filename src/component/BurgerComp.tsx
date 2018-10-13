@@ -11,16 +11,22 @@ export default class BurgerComp extends React.Component<IPropsBurger>
 
     public shouldComponentUpdate(nextProps: any, nextState: any)
     {
-        return (nextProps.orderPhase === 1 || nextProps.orderPhase === 6);
+        return (!nextProps.checkOut);
     }
 
     public render()
     {
-        console.log('burger render...');
-        return (
-        <div className='Burger'>
-            {this.burgerComp()}
-        </div>);
+        if(this.props.checkOut) {
+            return(
+            <div className='BurgerChkOut'>
+                {this.burgerComp()}
+            </div>);
+        } else {
+            return (
+            <div className='Burger'>
+                {this.burgerComp()}
+            </div>);
+        }
     }
 
     private burgerComp(): JSX.Element[]
