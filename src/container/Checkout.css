@@ -1,34 +1,85 @@
 .CheckOutLayoutMaster {
     width: 100%;
+    margin: auto;
     margin-top: 72px;
     display: grid;
-    grid-template-columns: 65% 35%;
-}
-.CheckOutLayout {
-    font-size: 1.1em;
-    /* background-color: lightgrey; */
-}
-.CheckOutLayout h4 {
-    margin-top: 45px;
+    grid-template-columns: 55% 45%;
+    grid-gap: 0;
+    box-sizing: border-box;
 }
 
+.CheckOutLayout h4 {
+    margin: 10px;
+}
+.CheckOutLayout ul {
+    padding-left: 30px;
+}
 .CheckOutLayout p {
     font-weight: 500;
 }
 
-.CustInfo {
+.CustInfoContianer {
     grid-column: 1 / 3;
+    background-color: #CF8F2E;
+    box-sizing: border-box;
+}
+
+.CustInfo {
+    width: 100%;
     margin: auto;
-    display: grid;
-    grid-template-columns: 100px 200px;
-    grid-gap: 15px;
-    padding: 20px;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.CustInfoBtnPanel {
+    padding: 10px;
+    padding-top: 0;
+    text-align: center;
+    box-sizing: border-box;
+    width: 300px;
+    margin: auto;
 }
 
 .CustInfoBtn {
-    grid-column: 1 / 3;
-    margin: auto;
-    padding: 10px;
+    background-color: #DAD735;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #966909;
+    color: #966909;
+    font-family: inherit;
+    font-size: 1.1em;
+    padding: 8px 20px;
+    box-shadow: 2px 2px 2px #966909;
+    margin: 5px;
+}
+
+.CustInfoBtn:hover, .CustInfoBtn:active {
+    background-color: #A0DB41;
+    border: 1px solid #966909;
+    color: #966909;
+}
+
+.CustInfoBtn:disabled {
+    background-color: #C7C6C6;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+    color: #888888;
+}
+
+.CustInfoBtn:not(:disabled) {
+    animation: enable 0.3s linear;
+}
+
+.SummaryDiv {
+    font: inherit;
+    font-size: 1.0em;
+}
+
+.SummaryDiv h3, p, ul{
+    margin: 7px 0;
+}
+.SummaryDiv .Button {
+    margin-top: 0;
 }
 
 .Finish {
@@ -39,4 +90,34 @@
 .AddressP {
     padding-left: 75px;
     margin: 2px;
+}
+
+@media (min-width: 500px) and (min-height: 401px) {
+    .CustInfo {
+        width: 450px;
+    }
+    .SummaryDiv h3, p, ul{
+        margin: 15px;
+    }
+    .CheckOutLayout h4 {
+        margin-top: 50px;
+    }
+    .CheckOutLayout h4, ul, p{
+        padding-left: 40px;
+    }
+    .CheckOutLayout ul {
+        margin-left: 45px;
+    }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+    .CustInfo {
+        width: 500px;
+    }
+    .SummaryDiv h3, p, ul{
+        margin: 15px;
+    }
+    .CheckOutLayout h4 {
+        margin-top: 60px;
+    }
 }

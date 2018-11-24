@@ -1,35 +1,40 @@
 import * as React from 'react';
 import { axiosObj } from '../AppClass';
+import { connect } from 'react-redux';
 import BurgerComp from '../component/BurgerComp';
 import BuilderComp from '../component/BuilderComp';
 import { Spinner, Modal, Button } from '../component/MiscComps';
-import { IPropsBurgerBldr } from 'src/classes/IProps';
+import * as actions from '../store/actions';
+import { InitialState } from 'src/store/reducer';
+import { IPropsBurgerBuilder } from 'src/classes/IProps';
 import './BurgerBuilder.css';
 
-export default class BurgerBuilder extends React.Component<IPropsBurgerBldr>
+class BurgerBuilder extends React.Component<IPropsBurgerBuilder>
 {
     public render()
     {
-        if (this.props.initPhase) {
-            if(this.props.errMsg) {
+        if (this.props.initPhase) 
+        {
+            if(this.props.errMsg) { // init phase error, show the error message
                 return (
-                <Modal show={true}>
+                <Modal type='ErrorDsp' show={true}>
                     <div style={{textAlign: 'center'}}>
                         <p>Unable to Load Data from Server. {this.props.errMsg}</p>
                         <Button type='Danger' clicked={this.retryClicked}>Retry</Button>
                     </div>
                 </Modal> );
-            } else {
+            } else {            // init phase spinner while loading data
                 return (
                 <div className='InitSpinner'>
                     <Spinner/>
                 </div> );
             }
-        } else {
+        } else {                // loaded data from server, return the burger and builder
             return (
             <React.Fragment>
                 <BurgerComp burger={this.props.burger}
                 checkOut={false} />
+                
                 <BuilderComp burger={this.props.burger}
                 builderClick={this.moreLessClicked} 
                 orderClick={this.orderClicked} />
@@ -39,7 +44,8 @@ export default class BurgerBuilder extends React.Component<IPropsBurgerBldr>
 
     public componentDidMount()
     {
-        if(this.props.initPhase) {
+        if(this.props.initPhase) 
+        {
             this.fetchData();
         }
     }
@@ -50,16 +56,16 @@ export default class BurgerBuilder extends React.Component<IPropsBurgerBldr>
         {
             const igObj = resp.data;
             this.props.burger.fullItems = Object.keys(igObj).map(key => igObj[key]);
-            this.props.stateChange(false, '');
+            this.props.onDoneInit();
         }).catch(err => {
             console.log(err);
-            this.props.stateChange(true, err.message);
+            this.props.onErrorInit(err.message);
         });
     }
 
     private retryClicked = () =>
     {
-        this.props.stateChange(true, '');
+        this.props.onRetryInit();
         this.fetchData();
     }
     private moreLessClicked = () =>
@@ -71,3 +77,23 @@ export default class BurgerBuilder extends React.Component<IPropsBurgerBldr>
         this.props.history.push('/checkout');
     }
 }
+
+const mapStateToProps = (state: InitialState) =>
+{
+    return {
+        initPhase: state.initPhase,
+        errMsg: state.errMsg,
+        burger: state.burger
+    };
+}
+
+const mapDispatchToProps = (dispatch: any) =>
+{
+    return {
+        onDoneInit: () => dispatch({type: actions.DONE_INIT_PHASE}),
+        onErrorInit: (err: string) => dispatch({type: actions.ERROR_INIT_PHASE, errMsg: err}),
+        onRetryInit: () => dispatch({type: actions.RETRY_INIT_PHASE})
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

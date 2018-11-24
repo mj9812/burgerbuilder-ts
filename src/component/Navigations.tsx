@@ -12,9 +12,9 @@ const Navigations = () =>
             >Burger Builder</NavLink>
         </li>
         <li className='NavigationItem'>
-            <NavLink to='/checkout'
+            <NavLink to='/orders'
             // className={props.location.pathname==='/checkout' ? 'active' : ''} 
-            >Checkout</NavLink>
+            >Orders</NavLink>
         </li>
     </ul>);
 }

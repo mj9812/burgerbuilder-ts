@@ -15,14 +15,32 @@ const BackDrop = (props: IPropsShow) => (props.show ?
     <div className='BackDrop' onClick={props.clicked} /> : null
 );
 
-const Modal = (props: IPropsChild) => (
-    <React.Fragment>
-        <BackDrop show={props.show} clicked={props.clicked} />
-        <div className={'Modal ' + (props.show ? 'ShowModal' : 'HideModal')} >
-            { props.children }
-        </div>
-    </React.Fragment>
-);
+const Modal = (props: IPropsChild) => 
+{
+    let className = 'Modal';
+    if(props.show) {
+        className += ' ShowModal';
+    } else {
+        className += ' HideModal';
+    }
+    if(props.type === 'ErrorDsp') {
+        className += ' ErrorDsp';
+    }
+    if(props.type === 'SpinnerDsp') {
+        className += ' SpinnerDsp';
+    }
+    if(props.type === 'SummaryDsp') {
+        className += ' SummaryDsp';
+    }
+    return (
+        <React.Fragment>
+            <BackDrop show={props.show} clicked={props.clicked} />
+            <div className={className} >
+                { props.children }
+            </div>
+        </React.Fragment>
+    );
+}
 
 const SideDrawer = (props: IPropsShow) =>
 {

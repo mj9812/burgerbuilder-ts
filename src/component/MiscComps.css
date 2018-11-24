@@ -58,14 +58,22 @@
     position: fixed;
     z-index: 500;
     background-color: white;
-    width: 70%;
+    width: 80%; /* change this to 70% in media query for big screens */
     border: 1px solid #ccc;
     box-shadow: 1px 1px 1px black;
     padding: 16px;
-    left: 15%;
-    top: 15%;
+    left: calc(50% - 40%);
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+}
+.ErrorDsp {
+    top: 35%;
+}
+.SpinnerDsp {
+    top: 30%;
+}
+.SummaryDsp {
+    top: 7%;
 }
 
 .ShowModal {

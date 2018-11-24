@@ -1,0 +1,5 @@
+
+export const DONE_INIT_PHASE = 'DONE_INIT_PHASE';
+export const ERROR_INIT_PHASE = 'ERROR_INIT_PHASE';
+export const RETRY_INIT_PHASE = 'RETRY_INIT_PHASE';
+export const RESET_CUST = 'RESET_CUST';

@@ -35,7 +35,7 @@ export default class BurgerComp extends React.Component<IPropsBurger>
         const comps: JSX.Element[] = [ this.ingredientComp(breads[0].name, 0) ];
         if (this.props.burger.countTotal === 2)
         {
-            comps.push(<p key='NoIngr'>Please add ingredients...</p>);
+            comps.push(<p key='NoIngr'>Please add ingredients</p>);
         }
         else {
             this.props.burger.ingredients.forEach(ingr =>

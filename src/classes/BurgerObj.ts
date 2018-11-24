@@ -3,7 +3,7 @@ import IngrObj from "./IngrObj";
 export default class BurgerObj
 {
     private fullItem: IngrObj[];
-    private fullCopy: any[];
+    private fullCopy: IngrObj[];
     private breds:IngrObj[] = [];
     private ingrs:IngrObj[] = [];
     private totalCount = 0;
@@ -16,7 +16,7 @@ export default class BurgerObj
     set fullItems(igs)
     {
         this.fullItem = igs;
-        this.fullCopy = this.fullItem.map(ig => ({...ig}));
+        this.fullCopy = this.fullItem.map(ig => ({...ig}) as IngrObj);
         this.breds = this.fullItem.filter(ig => ig.name.startsWith('Bread'));
         this.ingrs = this.fullItem.filter(ig => !ig.name.startsWith('Bread'));
         this.fullItem.forEach(ig => {

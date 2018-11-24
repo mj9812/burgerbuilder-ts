@@ -1,160 +1,128 @@
 import * as React from 'react';
-import BurgerComp from 'src/component/BurgerComp';
-import { IPropsBurger } from 'src/classes/IProps';
-import './Checkout.css';
-import IngrObj from 'src/classes/IngrObj';
-import { Button, Modal, Spinner } from 'src/component/MiscComps';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { Modal, Spinner, Button } from 'src/component/MiscComps';
 import { axiosObj } from 'src/AppClass';
+import { InitialState } from 'src/store/reducer';
+import { OrderForm } from '../component/OrderForm';
+import { SummaryForm } from '../component/SummaryForm';
+import * as actions from '../store/actions';
+import { InputFieldObj } from 'src/component/InputField';
+import { IPropsCheckout } from 'src/classes/IProps';
+import './Checkout.css';
 
-export default class Checkout extends React.Component<IPropsBurger>
+class Checkout extends React.Component<IPropsCheckout>
 {
-
-    private refName: any;
-    private refAddr: any;
-    private refArea: any;
-    private refZipc: any;
-    private refEmal: any;
-    private refDelv: any;
     private orderPhase: number;
     private errMsg: string;
 
-    constructor(props: IPropsBurger)
+    constructor(props: IPropsCheckout)
     {
         super(props);
-        this.refName = React.createRef();
-        this.refAddr = React.createRef();
-        this.refArea = React.createRef();
-        this.refZipc = React.createRef();
-        this.refEmal = React.createRef();
-        this.refDelv = React.createRef();
         this.orderPhase = 0;
         this.errMsg = '';
     }
 
     public componentWillMount()
     {
-        if(this.props.burger.countTotal < 3)
+        if (this.props.burger.countTotal < 3) 
         {
-            this.props.history.push('/');
+            this.goBack();
         }
     }
     public render()
     {
-        if(this.props.burger.countTotal < 3)
+        if (this.props.burger.countTotal < 3) 
         {
-            return null;
+            return <Redirect to='/' push={true} />
         }
         else {
-            return this.orderWithSummary();
-        }
-    }
-    public componentDidMount()
-    {
-        if(this.refName.current) 
-        {
-            this.refName.current.focus();
+            const showModal = (this.orderPhase !== 0 && this.orderPhase !== 2)
+            return (
+            <React.Fragment>
+                <OrderForm burger={this.props.burger} goBack={this.goBack}
+                    orderClick={this.orderClick} orderForm={this.props.orderForm}
+                    onfocus={this.onFocusHandler} onblur={this.focusOutHandler}
+                    onchange={this.changeHandler} />
+                {
+                    this.orderPhase === 1 ? ( // SHOW SUMMARY of Order and Cust Info
+                    <Modal type='SummaryDsp' show={showModal}
+                        clicked={this.cancelClick}>
+                        <SummaryForm 
+                        cancelClick={this.cancelClick}
+                        burger={this.props.burger} orderForm={this.props.orderForm}
+                        orderContinue={this.orderContinue} />
+                    </Modal>) : this.orderPhase === 3 ? ( // Sending form to Server
+                    <Modal type='SpinnerDsp' show={showModal} clicked={this.cancelClick}>
+                        <Spinner />
+                    </Modal>) : this.orderPhase === 4 ? ( // Completed Successfully
+                    <Modal type='SpinnerDsp' show={showModal} clicked={this.cancelClick}>
+                        <p className='Finish'>Your Order has been successfully submitted.</p>
+                        <Button type='Success' clicked={this.finishClick}>Finish</Button>
+                    </Modal>) : ( // Could not submit order
+                    <Modal type='ErrorDsp' show={showModal} clicked={this.cancelClick}>
+                        <p>Could not submit Your Order! {this.errMsg} !!</p>
+                        <Button type='Danger' clicked={this.cancelClick}>Close</Button>
+                    </Modal>)
+                }
+            </React.Fragment>);
         }
     }
 
-    private orderWithSummary = () =>
+    private onFocusHandler = (event: any, elemID: string) =>
     {
-        const showModal = (this.orderPhase !== 0 && this.orderPhase !== 2)
-        return (
-        <React.Fragment>
-            { this.orderForm() }
-            <Modal show={showModal} clicked={this.cancelClick}>
-                { this.orderPhase === 3 ? <Spinner/> : this.summaryForm() }
-            </Modal> 
-        </React.Fragment> );
+        const field: InputFieldObj = this.props.orderForm[elemID];
+        field.touched = true;
     }
-    private orderForm = () =>
+
+    private focusOutHandler = (event: any, elemID: string) =>
     {
-        return (
-        <div className='CheckOutLayoutMaster'>
-            <div className='CheckOutLayout'>
-                <BurgerComp burger={this.props.burger}
-                checkOut={true} />
-            </div>
-            <div className='CheckOutLayout'>
-                <h4>Ingredients : </h4>
-                <ul>
-                    { this.props.burger.ingredients.map(ingr => this.listItem(ingr)) }
-                </ul>
-                <p>Total Price : {this.props.burger.priceTotal} $ </p>
-            </div>
-            <div className='CheckOutLayout CustInfo'>
-                Name : <input type='text' ref={this.refName} />
-                Address : <input type='text' ref={this.refAddr} />
-                Area: <input type='text' ref={this.refArea} />
-                Zip Code : <input type='number' ref={this.refZipc} />
-                Email : <input type='email' ref={this.refEmal} />
-                Delivery : <input type='text' ref={this.refDelv} />
-            </div>
-            <div className='CheckOutLayout CustInfoBtn'>
-                <Button type='Success' clicked={this.orderClick} >Order Now</Button>
-                <Button type='Danger' clicked={this.goBack} >Cancel</Button>
-            </div>
-        </div> );
+        const field: InputFieldObj = this.props.orderForm[elemID];
+        field.value = event.target.value;
+        field.valid = this.validateField(field.value, field.rules);
+        this.setState({});
     }
-    private summaryForm = () =>
+
+    private changeHandler = (event: any, elemID: string) =>
     {
-        let btnPanel;
-        if (this.orderPhase === 4) {
-            btnPanel = <React.Fragment>
-                <p className='Finish'>Your Order has been successfully submitted.</p>
-                <Button type='Success' clicked={this.finishClick}>Finish</Button>
-            </React.Fragment>;
-        } else if (this.orderPhase === 5) {
-            btnPanel = <React.Fragment>
-                <p>Could not submit Your Order! {this.errMsg}!!</p>
-                <Button type='Danger' clicked={this.cancelClick}>Close</Button>
-            </React.Fragment>;
-        } else {
-            btnPanel = <React.Fragment>
-                <h3>Your Order</h3>
-                <p>A Delicious Burger
-                    with the following ingredients
-                </p>
-                <ul>
-                    {this.props.burger.ingredients.map(ingr => this.listItem(ingr))}
-                </ul>
-                <p>Total Price : {this.props.burger.priceTotal} $ </p>
-                <h3>Your Details</h3>
-                <p>Name : {this.refName.current ? this.refName.current.value : ''}</p>
-                <p style={{marginBottom: '0'}}>Address 
-                : {this.refAddr.current ? this.refAddr.current.value : ''}</p>
-                {/* <p style={{textIndent: '30%'}}>
-                    {this.refAddr.current ? this.refAddr.current.value : ''}</p> */}
-                    <p className='AddressP'>
-                    {this.refArea.current ? this.refArea.current.value : ''}</p>
-                    <p className='AddressP'>
-                    {this.refZipc.current ? this.refZipc.current.value : ''}</p>
-                <p>Delivery : {this.refDelv.current ? this.refDelv.current.value : ''}</p>
-                <p style={{fontWeight: 'bold'}}>Continue to Checkout?</p>
-                <Button type='Danger' clicked={this.cancelClick}>Cancel</Button>
-                <Button type='Success' clicked={this.orderContinue}>CheckOut</Button>
-            </React.Fragment>;
+        this.focusOutHandler(event, elemID);
+    }
+
+    private validateField = (value: string, rules: any) =>
+    {
+        let isValid = true;
+
+        if(rules) 
+        {
+            if (rules.required) {
+                isValid = value.trim() !== '' && isValid;
+            }
+            if (rules.isName) {
+                const pattern = /^[^\s\d\W]+\s[^\s\d\W]+$/
+                isValid = pattern.test(value) && isValid
+            }
+            if (rules.isNumeric) {
+                const pattern = /^\d+$/;
+                isValid = pattern.test(value) && isValid
+            }
+            if (rules.minLength) {
+                isValid = value.length >= rules.minLength && isValid
+            }
+            if (rules.maxLength) {
+                isValid = value.length <= rules.maxLength && isValid
+            }
+            if (rules.isEmail) {
+                const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                isValid = pattern.test(value) && isValid
+            }
         }
-        return btnPanel;
-    }
-    private listItem(ingr: IngrObj): JSX.Element
-    {
-        return <li key={ingr.name}> {ingr.name + ' : ' + ingr.count} </li>
+        return isValid;
     }
 
     private orderClick = () =>
     {
-        if(this.refName.current.value && this.refAddr.current.value 
-            && this.refArea.current.value && this.refZipc.current.value 
-            && this.refEmal.current.value && this.refDelv.current.value)
-        {
-            this.orderPhase = 1;
-            this.setState({});
-        }
-        else 
-        {
-            alert('Please fill Customer and Delivery information to Complete Order.');
-        }
+        this.orderPhase = 1;
+        this.setState({});
     }
     private goBack = () =>
     {
@@ -162,8 +130,8 @@ export default class Checkout extends React.Component<IPropsBurger>
     }
     private cancelClick = () =>
     {
-        if(this.orderPhase !== 3) 
-        {
+        if (this.orderPhase !== 3) // checking if the spinner is running
+        {                           // also disable backdrop click hiding the spinner
             this.orderPhase = 2;
             this.setState({});
         }
@@ -173,19 +141,19 @@ export default class Checkout extends React.Component<IPropsBurger>
         this.orderPhase = 3;
         this.setState({});
         const ingreds = {};
-        this.props.burger.ingredients.forEach(ingr => ingreds[ingr.name] = ingr.count);
+        this.props.burger.ingredients.forEach((ingr: any) => ingreds[ingr.name] = ingr.count);
         const order = {
             ingredients: ingreds,
             price: this.props.burger.priceTotal,
             customer: {
-                name: this.refName.current.value,
+                name: this.props.orderForm.InpName.value,
                 address: {
-                    street: this.refAddr.current.value,
-                    place: this.refArea.current.value,
-                    zipcode: this.refZipc.current.value
+                    street: this.props.orderForm.InpAddr.value,
+                    place: this.props.orderForm.InpArea.value,
+                    zipcode: this.props.orderForm.InpZipc.value
                 },
-                email: this.refEmal.current.value,
-                deliveryMethod: this.refDelv.current.value
+                email: this.props.orderForm.InpEmal.value,
+                deliveryMethod: this.props.orderForm.InpDelv.value
             }
         };
         axiosObj.post('/orders.json', order)
@@ -199,12 +167,24 @@ export default class Checkout extends React.Component<IPropsBurger>
                 this.orderPhase = 5;
                 this.errMsg = err.message;
                 this.setState({});
-            }
-        );
+            });
     }
     private finishClick = () =>
     {
         this.props.burger.resetItems();
-        this.goBack();
+        this.props.onFinish();
     }
 }
+
+const mapStateToProps = (state: InitialState) =>
+{
+    return { burger: state.burger, orderForm: state.orderForm };
+}
+const mapDispatchToProps = (dispatch: any) =>
+{
+    return {
+        onFinish: () => dispatch({type: actions.RESET_CUST})
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

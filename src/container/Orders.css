@@ -1,0 +1,18 @@
+.OrdersLayout {
+    width: 80%;
+    margin-top: 72px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.OrderIngredients {
+    font-size: 1.1em;
+    margin: auto;
+}
+
+.OrderCustomerInfo {
+    font-size: 1.1em;
+    margin: auto;
+}
